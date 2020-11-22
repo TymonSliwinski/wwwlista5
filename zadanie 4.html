@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        div.wykres > div {
+                width:50px;
+                margin:20px;
+                box-shadow:10px 10px 5px grey;
+                border:1px solid grey;
+                display:inline-block;
+                margin-top:50px;
+                vertical-align:bottom;
+            }
+        div.wykres > div b { 
+                top:-20px;
+                display:box;
+                position:relative;
+                text-shadow:5px 5px 5px grey;
+            }   
+        div.wykres div div {
+                color:white;
+                position:relative;
+                top:-19px;
+                text-shadow:0px 0px 5px black;                
+                }
+        input {width:100px; margin-top: 10px;}
+    </style>
+</head>
+<body>
+<button onclick="wszyscy()">Wszyscy</button>
+<button onclick="pokaz('chemia')">Chemia</button>
+<button onclick="pokaz('fizyka')">Fizyka</button>
+<button onclick="pokaz('astronomia')">Astronomia</button>
+<button onclick="pokaz('dietetyka')">Dietetyka</button>
+<button onclick="wylicz(policz(student))">Wylicz</button>
+<button onclick="rysuj(policz(student))">Rysuj</button></br>
+<label>imię: </label><input id="imie"> 
+<label>nazwisko: </label><input id="nazwisko"> 
+<label>kierunek: </label>
+<select id="kierunek">
+    <option value="">wybierz</option>
+    <option>fizyka</option>
+    <option>astronomia</option>
+    <option>chemia</option>
+    <option>dietetyka</option>
+</select>
+ wzrost: <input id="wzrost" style="width:40px">
+<button onclick="append()">Dodaj</button>
+<div id='lista'></div>
+<script>
+    var lst = document.getElementById('lista')
+    var student=[ {imie:"Ola",nazwisko:"Lis",kierunek:"fizyka",wzrost:170},
+                  {imie:"Ala",nazwisko:"Góral",kierunek:"chemia",wzrost:165},
+                  {imie:"Jan",nazwisko:"Nowak",kierunek:"fizyka",wzrost:180},
+                  {imie:"Tadeusz",nazwisko:"Król",kierunek:"astronomia",wzrost:185},
+                  {imie:"Patrycja",nazwisko:"Mójta",kierunek:"dietetyka",wzrost:175},
+                  {imie:"Stefan",nazwisko:"Krasulak",kierunek:"chemia",wzrost:172},
+                  {imie:"Martyna",nazwisko:"Kulej",kierunek:"fizyka",wzrost:161},];
+    function wszyscy() {
+        lst.innerHTML = '<h2>Studenci</h2>'
+        let s = '<ol>'
+        var col;
+        for (i of student) {
+            switch (i.kierunek){
+                case 'fizyka':
+                    col = 'skyblue';
+                    break;
+                case 'chemia':
+                    col = 'red';
+                    break;
+                case 'astronomia':
+                    col = 'lightgreen'
+                    break;
+                default:
+                    col = 'yellow';
+            }
+            s += `<li style="background-color:${col};width:${i.wzrost*1.2}px">${i.imie} ${i.nazwisko} (${i.kierunek})</li>`
+        }           
+        s += '</ol>'
+        lst.innerHTML += s
+    }
+    function pokaz(k) {
+        lst.innerHTML = '<h2>' + k[0].toUpperCase() + k.slice(1) + '</h2>'
+        let s = '<ol>';
+        for (i of student) {
+            if(i.kierunek == k) s+= `<li>${i.imie} ${i.nazwisko}</li>`
+        }
+        s += '</ol>';
+        lst.innerHTML += s;
+    } 
+    function policz(arr){
+        var obj = {};
+        for (i of arr){
+            if (obj[i.kierunek] == undefined){
+                obj[i.kierunek] = 1;
+            } else {obj[i.kierunek] += 1}
+        }
+        return obj;
+    }
+    function wylicz(obiekt){
+        let s = "<ul>"
+        for (let [key, value] of Object.entries(obiekt)) {
+            s += `<li>${key}: ${value}</li>`
+        }
+        s += "</ul>"
+        lst.innerHTML = `<h2>Policz</h2>${s}`;
+    }
+    function rysuj(obiekt){
+        var dane = {title: "wykres", data: [], legend: "wykres słupkowy ilości studentów na danym kierunku"};
+        for (let [key, value] of Object.entries(obiekt)){
+            let tempobj = {};
+            let tempcol = "";
+            switch (key){
+                case 'fizyka':
+                    tempcol = 'skyblue';
+                    break;
+                case 'chemia':
+                    tempcol = 'red';
+                    break;
+                case 'astronomia':
+                    tempcol = 'lightgreen'
+                    break;
+                default:
+                    tempcol = 'yellow';
+            }
+            tempobj.name = key;
+            tempobj.value = value;
+            tempobj.color = tempcol;           
+            dane.data.push(tempobj);            
+        }
+        wykres(dane);
+    }
+    function wykres(dane)
+        {
+            let t='<h2>' + dane.title + '</h2>';
+            t+='<div class="wykres">';
+            for(let d of dane.data)
+            {
+                t+="<div style='height:"+d.value*10+"px;background:"+d.color+"'>";
+                t+="<b>"+d.name+"</b>";
+                t+="<div>"+d.value+"</div>";
+                t+="</div>";
+            }
+             
+            t+='</div>';
+            t+="<div>" + dane.legend + "</div>";
+            lst.innerHTML = t;
+        }   
+    function append(){  
+        let inp = document.getElementsByTagName('input');
+        var newStudent = {};
+        for (let i of inp){
+            if (i.value == ""){
+                lst.innerHTML = "<br><b>wprowadź dane</b>";
+                return;
+            }
+        }
+        if (document.getElementById('kierunek').value == "") {lst.innerHTML = "<br><b>wybierz kierunek</b>"; return}
+        newStudent.imie = document.getElementById('imie').value;
+        newStudent.nazwisko = document.getElementById('nazwisko').value;
+        newStudent.wzrost = document.getElementById('wzrost').value;
+        newStudent.kierunek = document.getElementById('kierunek').value;
+        student.push(newStudent);
+        lst.innerHTML = `<br><b>Dodano ${newStudent.imie} ${newStudent.nazwisko} do listy studentów.</b>`;
+        for (let i of inp){
+            i.value = "";
+        }
+        document.getElementById('kierunek').value = "";
+    }
+</script>
+</body>
+</html>

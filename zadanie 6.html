@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title>bałwany</title>
+    <style>
+        body {text-align: center;} 
+    </style>
+</head>
+<body>
+    <canvas id="draw" height="600" width="600" style="border: 1px solid black">
+        Your browser does not support the canvas tag.
+    </canvas>
+
+    <script>
+        var ctx=document.getElementById("draw").getContext("2d");
+
+        function snowman(x, y, h){
+            ctx.lineWidth = 0.5*h;
+            ctx.fillStyle = "black";
+            ctx.beginPath();
+		    ctx.arc(x, y, h*12, 0, 2*Math.PI); // dolne kółko
+            ctx.stroke(); 
+            
+            ctx.beginPath();
+		    ctx.arc(x, y-(h*12+h*10), h*10, 0, 2*Math.PI); // głowa 
+            ctx.stroke(); 
+            
+            ctx.beginPath();
+		    ctx.arc(x, y-(20*h), h*5, 0.55, 0.8*Math.PI); // uśmiech
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(x-3*h, y-(h*12+h*10+h), 0.8*h, 0, 2*Math.PI); // oko lewe
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.arc(x+3*h, y-(h*12+h*10+h), 0.8*h, 0, 2*Math.PI); // oko prawe
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x, y-22*h);
+            ctx.lineTo(x-4*h, y-19*h);  // marchewa
+            ctx.lineTo(x, y-20*h);
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+            ctx.strokeStyle = "black";
+            for (i=0;i<=4;i++){
+                ctx.beginPath();
+                ctx.arc(x, y-2*i*h, 0.25*h, 0, 2*Math.PI); // 5 guzików
+                ctx.fill();
+            ctx.stroke();}       
+
+            ctx.fillStyle = "black";
+            ctx.moveTo(x-10*h, y-30*h);
+            ctx.lineTo(x+10*h, y-30*h); // rondel kapelusza
+            ctx.stroke();
+            ctx.fillRect(x-6*h, y-35*h, 12*h, 5*h); // kapelusz
+        }
+        function choinka(x, y, h){
+            ctx.lineWidth = 2*h;
+            ctx.fillStyle = "brown";
+            ctx.fillRect(x-2.6*h, y+22*h, 5*h, 12*h); // pień
+            ctx.strokeStyle = "green";
+            ctx.beginPath();
+            ctx.moveTo(x+0.5*h, y-h);
+            ctx.fillStyle = "green";
+            ctx.fillRect(x-3*h, y+h, 6*h, 21.5*h); // wypełnienie
+            for (i=1;i<=5;i++){ //lewa strona choinki
+                ctx.lineTo(x-6*h, y+5*h*i);
+                ctx.lineTo(x-2*h, y+4*h*i);
+                ctx.stroke();
+            }    
+            ctx.beginPath();
+            ctx.moveTo(x-0.5*h, y-h);
+            for (i=1;i<=5;i++){ //prawa strona choinki
+                ctx.lineTo(x+6*h, y+5*h*i);
+                ctx.lineTo(x+2*h, y+4*h*i);
+                ctx.stroke();
+            }
+            ctx.moveTo(x-3*h, y+40*h);
+            ctx.fillStyle = "green";
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            for (i=1;i<=4;i++){ // bombki czerwone
+                ctx.arc(x-4*h+2*h*i, y+3*h*i, h, 0, 2*Math.PI);
+                ctx.fill();
+            }
+            ctx.beginPath();
+            ctx.fillStyle = "blue";
+            for (i=1;i<=4;i++){ // bombki niebieskie
+                ctx.arc(x-5*h+2*h*i, y+10*h+3*h*i, h, 0, 2*Math.PI);
+                ctx.fill();
+            }
+        }
+        function domek(x, y, h){
+            ctx.lineWidth = h;
+            ctx.beginPath(); //dom
+            ctx.fillStyle = "saddlebrown";
+            ctx.strokeStyle = "maroon";
+            ctx.rect(x, y, 50*h, 30*h);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath(); //dach
+            ctx.moveTo(x+24.5*h, y-10*h);
+            ctx.lineTo(x+54*h, y+h);
+            ctx.lineTo(x-4*h, y+h);
+            ctx.lineTo(x+25*h, y-10*h);
+            ctx.fillStyle = "darkred";
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath(); //drzwi
+            ctx.lineWidth = 0.5*h
+            ctx.strokeStyle = "black";
+            ctx.rect(x+5*h, y+10*h, 10*h, 20*h);
+            ctx.fillStyle = "maroon";
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.lineWidth = 0.2*h
+            for(i=1;i<=4;i++){ //linie ozdobne na drzwiach
+                ctx.beginPath();
+                ctx.moveTo(x+5*h+2*h*i, y+11*h);
+                ctx.lineTo(x+5*h+2*h*i, y+29*h);
+                ctx.stroke();}
+
+            ctx.beginPath(); //okno
+            ctx.lineWidth = 0.5*h;
+            ctx.fillStyle = "yellow";
+            ctx.rect(x+25*h, y+8*h, 15*h, 10*h);
+            ctx.fill();
+            ctx.stroke();
+            ctx.lineWidth = 0.2*h;
+            ctx.moveTo(x+32.5*h, y+8*h); // kraty w oknie
+            ctx.lineTo(x+32.5*h, y+18*h);
+            ctx.moveTo(x+25*h, y+13*h);
+            ctx.lineTo(x+40*h, y+13*h);
+            ctx.stroke();
+
+        }
+        domek(400, 400, 3);
+        domek(50, 50, 5);
+        snowman(500, 210, 5);
+        snowman(350, 480, 2);
+        snowman(100, 300, 3);
+        choinka(350, 50, 5);
+        choinka(200, 300, 4);
+        choinka(580, 420, 2);
+    </script>
+</body>
+</html>
