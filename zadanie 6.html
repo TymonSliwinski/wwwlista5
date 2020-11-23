@@ -16,14 +16,20 @@
         var ctx=document.getElementById("draw").getContext("2d");
 
         function snowman(x, y, h){
+            h = h * 0.022;
+            x = x + (h*12.2);
+            y = y + (35*h)
             ctx.lineWidth = 0.5*h;
-            ctx.fillStyle = "black";
+            ctx.strokeStyle = "black";
             ctx.beginPath();
 		    ctx.arc(x, y, h*12, 0, 2*Math.PI); // dolne kółko
+            ctx.fillStyle = "white";
+            ctx.fill();
             ctx.stroke(); 
             
             ctx.beginPath();
 		    ctx.arc(x, y-(h*12+h*10), h*10, 0, 2*Math.PI); // głowa 
+            ctx.fill();
             ctx.stroke(); 
             
             ctx.beginPath();
@@ -32,6 +38,7 @@
 
             ctx.beginPath();
             ctx.arc(x-3*h, y-(h*12+h*10+h), 0.8*h, 0, 2*Math.PI); // oko lewe
+            ctx.fillStyle = "black";
             ctx.fill();
             ctx.stroke();
             
@@ -61,6 +68,9 @@
             ctx.fillRect(x-6*h, y-35*h, 12*h, 5*h); // kapelusz
         }
         function choinka(x, y, h){
+            h = h * 0.0288;
+            x = x + (10*h);
+            y = y + (2*h);
             ctx.lineWidth = 2*h;
             ctx.fillStyle = "brown";
             ctx.fillRect(x-2.6*h, y+22*h, 5*h, 12*h); // pień
@@ -86,17 +96,22 @@
             ctx.beginPath();
             ctx.fillStyle = "red";
             for (i=1;i<=4;i++){ // bombki czerwone
+                ctx.beginPath();
                 ctx.arc(x-4*h+2*h*i, y+3*h*i, h, 0, 2*Math.PI);
                 ctx.fill();
             }
             ctx.beginPath();
             ctx.fillStyle = "blue";
             for (i=1;i<=4;i++){ // bombki niebieskie
+                ctx.beginPath();
                 ctx.arc(x-5*h+2*h*i, y+10*h+3*h*i, h, 0, 2*Math.PI);
                 ctx.fill();
             }
         }
         function domek(x, y, h){
+            h = h * 0.0253;
+            x = x  + (6.5*h);
+            y = y + (10.5*h);
             ctx.lineWidth = h;
             ctx.beginPath(); //dom
             ctx.fillStyle = "saddlebrown";
@@ -143,14 +158,12 @@
             ctx.stroke();
 
         }
-        domek(400, 400, 3);
-        domek(50, 50, 5);
-        snowman(500, 210, 5);
-        snowman(350, 480, 2);
-        snowman(100, 300, 3);
-        choinka(350, 50, 5);
-        choinka(200, 300, 4);
-        choinka(580, 420, 2);
+        domek(250, 10, 200);
+        snowman(270, 100, 150);
+        choinka(150, 10, 200);
+        domek(50, 350, 150);
+        choinka(300, 350, 200);
+        snowman(450, 350, 200);
     </script>
 </body>
 </html>
