@@ -3,8 +3,146 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+    <style>
+        span {width:200px;display:inline-block;text-align:right}
+        input {margin: 5px 5px; width: 100px;}
+        select {width: 100px; margin-left: 5px;}
+        canvas {position: absolute; right: 100px; top: 20px}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
 
+<form id='form' onsubmit="add(this);return false;">
+
+<span>Figura</span>
+<select name='figura'>
+    <option value="">wybierz</option>
+    <option>kwadrat</option>
+    <option>prostokąt</option>
+    <option>koło</option>
+    <option>zegar</option>
+</select><br>
+
+<span>Odległość od lewej krawędzi</span>
+<input type='text' name ='x'  value='' placeholder='x'><br>
+
+<span>Odległość od górnej krawędzi</span>
+<input type='text' name ='y'  value='' placeholder='y'><br>
+
+<span>Wysokość</span>
+<input type='text' name ='h'  value='' placeholder='h'><br>
+
+<span>Szerokość</span>
+<input type='text' name ='w'  value='' placeholder='w'><br>
+
+<span>Prędkość x</span>
+<input type='text' name ='vx'  value='' placeholder='vx'><br>
+
+<span>Prędkość y</span>
+<input type='text' name ='vy'  value='' placeholder='vy'><br>
+
+<span>Kolor</span>
+<select name='kolor'>
+    <option>black</option>
+    <option>blue</option>
+    <option>red</option>
+    <option>green</option>
+    <option>yellow</option>
+</select><br>
+
+<span></span>
+<input type=submit value='Rysuj'>
+</form>
+<div id='sh'></div>
+
+<canvas id="draw" height="600" width="600" style="border: 1px solid black">
+    Your browser does not support the canvas tag.
+</canvas>
+<script>
+    var figury = [];
+    var ctx=document.getElementById("draw").getContext("2d");
+    /* function clear(){
+        ctx.fillStyle="white";
+		ctx.fillRect(0,0,600,600);
+    }
+    setInterval(clear, 1000) */
+
+    function add(inp)
+    {
+        var form = document.querySelector('form');
+        var data = Object.fromEntries(new FormData(form).entries());
+        /* for (let [key, value] of Object.entries(data)){
+            console.log(key, value)
+        } */
+        switch (inp.figura.value){
+            case 'koło':
+                figury.push(data);
+                setInterval(drawCircle, 100, figury[figury.length-1]);
+                break;
+            case 'prostokąt':
+                figury.push(data);
+                setInterval(drawRect, 100, figury[figury.length-1]);
+                break;
+            case 'kwadrat':
+                figury.push(data);
+                setInterval(drawSquare, 100, figury[figury.length-1]);
+                break;
+            case 'zegar':
+                figury.push(data);
+                setInterval(rysujZegar, 100, figury[figury.length-1]);
+                break;
+            default:
+                alert('błędny input!');
+        }
+    }
+
+    function drawCircle(obj)
+    {
+       
+
+        let x = +obj.x;
+        let y = +obj.y;
+        let h = +obj.h;
+        let vx = +obj.vx;
+        let vy = +obj.vy;
+        let col = obj.kolor;
+
+        ctx.strokeStyle = col;
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.arc(x, y, h, 0, 2*Math.PI);
+        ctx.fill();
+
+        obj.x = +obj.x + vx;
+        obj.y = +obj.y + vy;
+        
+        if (x > (600-(h)) || x < (0+(h))) obj.vx *= -1; 
+		if (y > (600-(h)) || y < (0+(h))) obj.vy *= -1;
+    }
+
+    function drawRect(obj)
+    {
+        let x = +obj.x;
+        let y = +obj.y;
+        let h = +obj.h;
+        let w = +obj.w;
+        let vx = +obj.vx;
+        let vy = +obj.vy;
+        let col = obj.kolor;
+
+        ctx.strokeStyle = col;
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.fillRect(x, y, w, h);
+        ctx.fill();
+
+        if (x > (600-(w)) || x < (0+(w))) vx *= -1;
+		if (y > (600-(h)) || y < (0+(h))) vy *= -1; 
+
+        x += vx;
+        y += vy;
+    }
+</script>
 </body>
 </html>
