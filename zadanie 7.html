@@ -96,7 +96,7 @@
                 ctx.fill();
             }
         }
-        function house(x, y, h){
+        function domek(x, y, h){
             ctx.lineWidth = h;
             ctx.beginPath(); //dom
             ctx.fillStyle = "saddlebrown";
@@ -149,7 +149,7 @@
         {x:400, y:500, vx:0, vy:0, height:100, width:200, rysuj:domek}
         ];
         function balwan(){ snowman(this.x,this.y,this.height)}
-        function domek(){ house(this.x,this.y,this.height)}
+        function domek(){ domek(this.x,this.y,this.height)}
         function redraw(dane){
             ctx.clearrect(600,600);
             for(let x of dane)
