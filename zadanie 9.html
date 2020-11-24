@@ -204,7 +204,8 @@
 
 		// tarcza zegara		
 		ctx.strokeStyle=col; // kolor linii  
-		ctx.lineWidth=s*3; 		 // szerokość linii
+        ctx.lineWidth=s*3; 		 // szerokość linii
+        ctx.fillStyle = "white";
 		
 		ctx.beginPath();
 		// rysujemy okrąg
@@ -214,7 +215,8 @@
 				0,        // kąt początkowy
 				2*Math.PI // kąt końcowy 
 				);
-		ctx.stroke();     // narysuj        
+        ctx.stroke();     // narysuj    
+        ctx.fill();    
 		
 
 		// Znaczki godzinowe o szerokości 10
