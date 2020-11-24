@@ -8,6 +8,7 @@
         input {margin: 5px 5px; width: 100px;}
         select {width: 100px; margin-left: 5px;}
         canvas {position: absolute; right: 100px; top: 20px}
+        button {margin-left: 5px;}
     </style>
 </head>
 <body>
@@ -32,13 +33,13 @@
 <input type='text' name ='h'  value='50' placeholder='h'><br>
 
 <span>Szerokość</span>
-<input type='text' name ='w'  value='20' placeholder='w'><br>
+<input type='text' name ='w'  value='70' placeholder='w'><br>
 
 <span>Prędkość x</span>
-<input type='text' name ='vx'  value='4' placeholder='vx'><br>
+<input type='text' name ='vx'  value='3' placeholder='vx'><br>
 
 <span>Prędkość y</span>
-<input type='text' name ='vy'  value='8' placeholder='vy'><br>
+<input type='text' name ='vy'  value='5' placeholder='vy'><br>
 
 <span>Kolor</span>
 <select name='kolor'>
@@ -90,7 +91,8 @@
             clearTimeout(i);}
 
         rysuj = setInterval(clear, 50) //czyść co 50ms
-        var bootton = "";
+        
+        var bootton = ""; // przechowuje przyciski
 
         for (obj of figury){ // rysuj od nowa
             switch (obj.figura){
@@ -104,11 +106,12 @@
                 setInterval(rysujZegar, 50, obj);
                 break;
             }
-        let idx = figury.indexOf(obj);
+        let idx = figury.indexOf(obj); // index aktualnego obiektu
         bootton += `<button onclick='del(${idx});this.style.display="none"'>usuń ${idx}</button>`
-        
+        // przycisk do znikania go
         }
         document.getElementById('usuwanie').innerHTML = bootton;
+        // dodaj przyciski 
     }
 
     function drawCircle(obj)
@@ -245,7 +248,6 @@
     function del(n)
     {
         figury.splice(n, 1);
-
         redraw();
     }
 </script>
