@@ -3,8 +3,251 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+    <style>
+        span {width:200px;display:inline-block;text-align:right}
+        input {margin: 5px 5px; width: 100px;}
+        select {width: 100px; margin-left: 5px;}
+        canvas {position: absolute; right: 100px; top: 20px}
+    </style>
 </head>
 <body>
 
+<form id='form' onsubmit="add(this);return false;">
+
+<span>Figura</span>
+<select name='figura'>
+    <option value="">wybierz</option>
+    <option>prostokąt</option>
+    <option>koło</option>
+    <option>zegar</option>
+</select><br>
+
+<span>Odległość od lewej krawędzi</span>
+<input type='text' name ='x'  value='150' placeholder='x'><br>
+
+<span>Odległość od górnej krawędzi</span>
+<input type='text' name ='y'  value='150' placeholder='y'><br>
+
+<span>Wysokość</span>
+<input type='text' name ='h'  value='50' placeholder='h'><br>
+
+<span>Szerokość</span>
+<input type='text' name ='w'  value='20' placeholder='w'><br>
+
+<span>Prędkość x</span>
+<input type='text' name ='vx'  value='4' placeholder='vx'><br>
+
+<span>Prędkość y</span>
+<input type='text' name ='vy'  value='8' placeholder='vy'><br>
+
+<span>Kolor</span>
+<select name='kolor'>
+    <option>black</option>
+    <option>blue</option>
+    <option>red</option>
+    <option>green</option>
+    <option>yellow</option>
+</select><br>
+
+<span></span>
+<input type=submit value='Rysuj'>
+</form>
+
+<div id="usuwanie"></div>
+
+<canvas id="draw" height="600" width="600" style="border: 1px solid black">
+    Your browser does not support the canvas tag.
+</canvas>
+<script>
+    var figury = [];
+    var ctx=document.getElementById("draw").getContext("2d");
+    var rysuj;
+
+    function clear()
+    {
+        ctx.fillStyle="white";
+		ctx.fillRect(0,0,600,600);
+    }
+
+    function add(inp)
+    {
+        var form = document.querySelector('form');
+        var data = Object.fromEntries(new FormData(form).entries());
+        /* for (let [key, value] of Object.entries(data)){
+            console.log(key, value)
+        } */
+        var kształty = ["koło", "zegar", "prostokąt"];
+
+        if (kształty.includes(inp.figura.value)){
+            figury.push(data);
+            redraw();
+        } else { alert('błędny input!');}
+    }
+
+    function redraw(){
+        var highestTimeoutId = setTimeout(":"); 
+        for (var i = 0; i < highestTimeoutId; i++){ // usuń wszystkie timery
+            clearTimeout(i);}
+
+        rysuj = setInterval(clear, 50) //czyść co 50ms
+        var bootton = "";
+
+        for (obj of figury){ // rysuj od nowa
+            switch (obj.figura){
+            case 'koło':
+                setInterval(drawCircle, 50, obj);
+                break;
+            case 'prostokąt':
+                setInterval(drawRect, 50, obj);
+                break;
+            case 'zegar':
+                setInterval(rysujZegar, 50, obj);
+                break;
+            }
+        let idx = figury.indexOf(obj);
+        bootton += `<button onclick='del(${idx});this.style.display="none"'>usuń ${idx}</button>`
+        
+        }
+        document.getElementById('usuwanie').innerHTML = bootton;
+    }
+
+    function drawCircle(obj)
+    {
+        /* ctx.fillStyle="white";
+		ctx.fillRect(0,0,600,600); */
+
+        let x = +obj.x;
+        let y = +obj.y;
+        let h = +obj.h;
+        let vx = +obj.vx;
+        let vy = +obj.vy;
+        let col = obj.kolor;
+
+        ctx.strokeStyle = col;
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.arc(x, y, h, 0, 2*Math.PI);
+        ctx.fill();
+
+        if (x > (600-(1.1*h)) || x < (0+(h))) obj.vx =+obj.vx * -1; 
+		if (y > (600-(1.1*h)) || y < (0+(h))) obj.vy =+obj.vy * -1;
+        
+        obj.x = +obj.x + +obj.vx;
+        obj.y = +obj.y + +obj.vy;
+
+        /* var t = ""
+        for (let [key, value] of Object.entries(obj)){
+            t += key + ": " + value;}
+        document.getElementById('sh').innerHTML = t */
+        
+    }
+
+    function drawRect(obj)
+    {
+        /* ctx.fillStyle="white";
+		ctx.fillRect(0,0,600,600); */
+
+        let x = +obj.x;
+        let y = +obj.y;
+        let h = +obj.h;
+        let w = +obj.w;
+        let vx = +obj.vx;
+        let vy = +obj.vy;
+        let col = obj.kolor;
+
+        ctx.strokeStyle = col;
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.fillRect(x, y, w, h);
+        ctx.fill();
+
+        if (x > (600-(1.1*w)) || x < (0)) obj.vx =+obj.vx * -1; 
+		if (y > (600-(1.1*h)) || y < (0)) obj.vy =+obj.vy * -1;
+        
+        obj.x = +obj.x + +obj.vx;
+        obj.y = +obj.y + +obj.vy;
+
+        /* var t = ""
+        for (let [key, value] of Object.entries(obj)){
+            t += key + ": " + value;}
+        document.getElementById('sh').innerHTML = t */
+    }
+
+	function rysujZegar(obj)
+	{    
+        
+        let x = +obj.x;
+        let y = +obj.y;
+        let s = 0.0035 * +obj.h;
+        let vx = +obj.vx;
+        let vy = +obj.vy;
+        let col = obj.kolor;
+
+        function kreska(ctx,r1,r2,alpha)
+	    {
+		alpha*=Math.PI*2;
+		ctx.beginPath();
+		ctx.moveTo(x+s*r1*Math.sin(alpha),y-s*r1*Math.cos(alpha));
+		ctx.lineTo(x+s*r2*Math.sin(alpha),y-s*r2*Math.cos(alpha));
+		ctx.stroke();
+	    }
+
+		if (x > (600-(1.1*obj.h)) || x < (0+(1.1*obj.h))) obj.vx =+obj.vx * -1; 
+		if (y > (600-(1.1*obj.h)) || y < (0+(1.1*obj.h))) obj.vy =+obj.vy * -1;
+
+		obj.x = +obj.x + +obj.vx;
+        obj.y = +obj.y + +obj.vy;
+		
+
+		// tarcza zegara		
+		ctx.strokeStyle=col; // kolor linii  
+		ctx.lineWidth=s*3; 		 // szerokość linii
+		
+		ctx.beginPath();
+		// rysujemy okrąg
+		ctx.arc(x, // x środka okręgu
+				y, // y środka okręgu
+				s*286, // promień łuku 
+				0,        // kąt początkowy
+				2*Math.PI // kąt końcowy 
+				);
+		ctx.stroke();     // narysuj        
+		
+
+		// Znaczki godzinowe o szerokości 10
+		ctx.lineWidth=s*10;
+		for(i=0;i<12;i++)
+			kreska(ctx,265,288,i/12);
+
+		// Znaczki minutowe o szerokości 3
+		ctx.lineWidth=s*3;
+		for(i=0;i<60;i++)
+			kreska(ctx,276,288,i/60);
+
+		
+		var data=new Date();           // Pobieramy datę systemową
+		var sekundy=data.getSeconds(); // Wyciągamy z niej sekundy
+		var minuty=data.getMinutes();  // minuty
+		var godziny=data.getHours();   // i godziny
+		
+		//Wskazówka godzinowa
+		ctx.lineWidth=s*20;
+		kreska(ctx,-40,200, godziny/12+minuty/60/12);
+		
+		//Wskazówka minutowa
+		kreska(ctx,-50,260, minuty/60+sekundy/60/60);
+		
+		//Wskazówka sekundowa
+		ctx.lineWidth=s*5;
+		kreska(ctx,-60,280, sekundy/60);
+	}
+
+    function del(n)
+    {
+        figury.splice(n, 1);
+
+        redraw();
+    }
+</script>
 </body>
 </html>
